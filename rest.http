@@ -1,0 +1,7 @@
+GET http://localhost:3000/reservaciones HTTP/1.1
+Content-Type: application/json
+
+{
+  "fecha": "2023-12-15",
+  "hora": "14:30"
+}
