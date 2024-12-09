@@ -115,7 +115,7 @@ router.delete('/:id', async (req, res) => {
     }
 });
 
-router.get('/user', async (req, res) => {
+router.post('/user', async (req, res) => {
     try {
         const { nombre } = req.body;
 
