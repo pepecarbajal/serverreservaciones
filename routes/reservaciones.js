@@ -92,6 +92,52 @@ router.get('/', async (req, res) => {
 });
 
 
+// Eliminar una reservación por su ID
+router.delete('/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        // Validar que el ID de la reservación esté presente y sea válido
+        if (!id) {
+            return res.status(400).json({ error: "El ID de la reservación es obligatorio." });
+        }
+
+        // Eliminar la reservación de la base de datos
+        const reservacionEliminada = await Reservacion.findByIdAndDelete(id);
+
+        if (!reservacionEliminada) {
+            return res.status(404).json({ error: "Reservación no encontrada." });
+        }
+
+        res.status(200).json({ message: "Reservación eliminada exitosamente.", reservacionEliminada });
+    } catch (error) {
+        res.status(500).json({ error: "Error al eliminar la reservación: " + error.message });
+    }
+});
+
+router.get('/user', async (req, res) => {
+    try {
+        const { nombre } = req.body;
+
+        // Validar que el nombre esté presente y sea válido
+        if (!nombre || typeof nombre !== 'string' || nombre.trim().length === 0) {
+            return res.status(400).json({ error: "El nombre del usuario es obligatorio y debe ser válido." });
+        }
+
+        // Buscar reservaciones realizadas por el usuario
+        const reservacionesUsuario = await Reservacion.find({ reservadoPor: nombre });
+
+        if (reservacionesUsuario.length === 0) {
+            return res.status(404).json({ error: "No se encontraron reservaciones para el usuario proporcionado." });
+        }
+
+        res.status(200).json(reservacionesUsuario);
+    } catch (error) {
+        res.status(500).json({ error: "Error al obtener las reservaciones del usuario: " + error.message });
+    }
+});
+
+
 
 
 module.exports = router;
