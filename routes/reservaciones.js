@@ -115,6 +115,26 @@ router.delete('/:id', async (req, res) => {
     }
 });
 
+router.get('/todas', async (req, res) => {
+    const { fecha } = req.query;
+
+    // Validar que la fecha esté presente y sea válida
+    const fechaRegex = /^\d{4}-\d{2}-\d{2}$/; // Formato YYYY-MM-DD
+    if (!fecha || !fechaRegex.test(fecha)) {
+        return res.status(400).json({ error: "La fecha es requerida y debe estar en el formato YYYY-MM-DD." });
+    }
+
+    try {
+        // Buscar reservaciones que coincidan con la fecha proporcionada
+        const reservaciones = await Reservacion.find({ fecha });
+
+        // Si no hay reservaciones, retornar un arreglo vacío
+        res.status(200).json(reservaciones.length > 0 ? reservaciones : []);
+    } catch (error) {
+        res.status(500).json({ error: "Error al obtener las reservaciones: " + error.message });
+    }
+});
+
 router.post('/user', async (req, res) => {
     try {
         const { nombre } = req.body;
