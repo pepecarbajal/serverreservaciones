@@ -18,9 +18,13 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
 // Rutas
 const usuariosRoutes = require('./routes/usuarios');
 const reservacionesRoutes = require('./routes/reservaciones');
+const comentariosRoutes = require('./routes/comentarios');
 
 app.use('/usuarios', usuariosRoutes);
 app.use('/reservaciones', reservacionesRoutes);
+app.use('/comentarios', comentariosRoutes);
+
+
 app.get('/', (req, res) => {
   res.send('¡Bienvenido a la API de Reservas!');
 })

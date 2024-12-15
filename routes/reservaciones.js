@@ -4,12 +4,10 @@ const Reservacion = require('../models/Reservacion'); // Asegúrate de que la ru
 const router = express.Router();
 
 
-// Guardar una nueva reservación
 router.post('/', async (req, res) => {
     try {
         const { numeroMesa, reservadoPor, fecha, hora, estaReservada } = req.body;
 
-        // Validaciones
         if (!numeroMesa || typeof numeroMesa !== 'number' || numeroMesa <= 0) {
             return res.status(400).json({ error: "El número de mesa es obligatorio y debe ser un número mayor a 0." });
         }
@@ -31,7 +29,6 @@ router.post('/', async (req, res) => {
             return res.status(400).json({ error: "El estado de la reservación (estaReservada) debe ser un valor booleano." });
         }
 
-        // Crear la nueva reservación
         const nuevaReservacion = new Reservacion({ numeroMesa, reservadoPor, fecha, hora, estaReservada });
         const reservacionGuardada = await nuevaReservacion.save();
 
@@ -41,7 +38,7 @@ router.post('/', async (req, res) => {
     }
 });
 
-// Eliminar una reservación por ID
+
 router.delete('/:id', async (req, res) => {
     try {
         const reservacionEliminada = await Reservacion.findByIdAndDelete(req.params.id);
@@ -61,7 +58,6 @@ router.delete('/:id', async (req, res) => {
 router.get('/', async (req, res) => {
     const { fecha, hora } = req.query;
 
-    // Validaciones para la fecha y hora
     const fechaRegex = /^\d{4}-\d{2}-\d{2}$/; // Formato YYYY-MM-DD
     if (!fecha || !fechaRegex.test(fecha)) {
         return res.status(400).json({ error: 'La fecha es requerida y debe estar en el formato YYYY-MM-DD.' });
@@ -73,16 +69,12 @@ router.get('/', async (req, res) => {
     }
 
     try {
-        // Buscar reservaciones que coincidan exactamente con la fecha y hora
         const reservacionesEnHorario = await Reservacion.find({ fecha, hora });
 
-        // Lista de todas las mesas (ajustar según la lógica de tu sistema)
         const todasLasMesas = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
-        // Extraer los números de las mesas reservadas
         const mesasReservadas = reservacionesEnHorario.map(reservacion => reservacion.numeroMesa);
 
-        // Filtrar las mesas disponibles
         const mesasDisponibles = todasLasMesas.filter(mesa => !mesasReservadas.includes(mesa));
 
         res.status(200).json({ mesasDisponibles });
@@ -92,17 +84,14 @@ router.get('/', async (req, res) => {
 });
 
 
-// Eliminar una reservación por su ID
 router.delete('/:id', async (req, res) => {
     try {
         const { id } = req.params;
 
-        // Validar que el ID de la reservación esté presente y sea válido
         if (!id) {
             return res.status(400).json({ error: "El ID de la reservación es obligatorio." });
         }
 
-        // Eliminar la reservación de la base de datos
         const reservacionEliminada = await Reservacion.findByIdAndDelete(id);
 
         if (!reservacionEliminada) {
@@ -118,17 +107,14 @@ router.delete('/:id', async (req, res) => {
 router.get('/todas', async (req, res) => {
     const { fecha } = req.query;
 
-    // Validar que la fecha esté presente y sea válida
-    const fechaRegex = /^\d{4}-\d{2}-\d{2}$/; // Formato YYYY-MM-DD
+    const fechaRegex = /^\d{4}-\d{2}-\d{2}$/; 
     if (!fecha || !fechaRegex.test(fecha)) {
         return res.status(400).json({ error: "La fecha es requerida y debe estar en el formato YYYY-MM-DD." });
     }
 
     try {
-        // Buscar reservaciones que coincidan con la fecha proporcionada
         const reservaciones = await Reservacion.find({ fecha });
 
-        // Si no hay reservaciones, retornar un arreglo vacío
         res.status(200).json(reservaciones.length > 0 ? reservaciones : []);
     } catch (error) {
         res.status(500).json({ error: "Error al obtener las reservaciones: " + error.message });
@@ -139,12 +125,10 @@ router.post('/user', async (req, res) => {
     try {
         const { nombre } = req.body;
 
-        // Validar que el nombre esté presente y sea válido
         if (!nombre || typeof nombre !== 'string' || nombre.trim().length === 0) {
             return res.status(400).json({ error: "El nombre del usuario es obligatorio y debe ser válido." });
         }
 
-        // Buscar reservaciones realizadas por el usuario
         const reservacionesUsuario = await Reservacion.find({ reservadoPor: nombre });
 
         if (reservacionesUsuario.length === 0) {
