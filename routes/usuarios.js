@@ -1,3 +1,4 @@
+// routes/usuarios.js
 const express = require('express');
 const Usuario = require('../models/Usuario'); // Asegúrate de que la ruta del modelo sea correcta
 

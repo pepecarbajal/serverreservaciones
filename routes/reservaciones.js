@@ -1,3 +1,4 @@
+// routes/reservaciones.js
 const express = require('express');
 const Reservacion = require('../models/Reservacion'); // Asegúrate de que la ruta del modelo sea correcta
 

@@ -1,3 +1,4 @@
+// models/Reservacion.js
 const mongoose = require('mongoose');
 
 const reservacionSchema = new mongoose.Schema({

@@ -1,3 +1,4 @@
+// routes/correo.js
 const express = require('express');
 const sgMail = require('@sendgrid/mail');
 const router = express.Router();
