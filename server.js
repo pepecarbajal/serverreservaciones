@@ -3,6 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -19,7 +20,9 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
 const usuariosRoutes = require('./routes/usuarios');
 const reservacionesRoutes = require('./routes/reservaciones');
 const comentariosRoutes = require('./routes/comentarios');
+const correoRoutes = require('./routes/correo');
 
+app.use('/enviar', correoRoutes);
 app.use('/usuarios', usuariosRoutes);
 app.use('/reservaciones', reservacionesRoutes);
 app.use('/comentarios', comentariosRoutes);
@@ -33,6 +36,7 @@ app.get('/', (req, res) => {
 app.use((err, req, res, next) => {
     res.status(err.status || 500).json({ error: err.message });
 });
+
 
 // Iniciar servidor
 app.listen(PORT, () => {
